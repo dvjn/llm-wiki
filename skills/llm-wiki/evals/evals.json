@@ -1,0 +1,35 @@
+{
+  "skill_name": "llm-wiki",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I just cloned a new Rust project and I want to set up an LLM wiki to track my understanding of the codebase. The project is a web server using Axum and it has a complex middleware stack. Help me initialize a wiki in a wiki/ directory with the proper structure and create a SCHEMA.md that fits a Rust web project.",
+      "expected_output": "A wiki/ directory with raw/, pages/ subdirectories, index.md, log.md, and a SCHEMA.md customized for a Rust Axum project with appropriate page categories and templates",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I have a wiki set up and I just added a new source file: wiki/raw/papers/paper-crdt-2011.md. It's a paper about Conflict-free Replicated Data Types. Please ingest this source into the wiki — create a source summary, update relevant concept pages, and create any new concept pages that are needed.",
+      "expected_output": "Source summary page created in wiki/pages/sources/, concept pages for CRDT and related concepts created/updated, index.md updated with new pages, log.md appended with ingest entry",
+      "files": ["wiki/raw/papers/paper-crdt-2011.md"]
+    },
+    {
+      "id": 3,
+      "prompt": "My wiki has been growing for a while and I suspect there might be some issues. Can you run a lint pass on the wiki to check for broken links, orphan pages, missing concepts, and contradictions? Report what you find and propose fixes.",
+      "expected_output": "Lint report identifying broken links, orphan pages, frequently mentioned concepts without pages, and potential contradictions. Log entry appended to wiki/log.md with lint results.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "I need to understand how authentication works in my system. Looking at my wiki, can you query the relevant pages and give me a synthesis of how authentication is implemented, what concepts are involved, and what design decisions were made?",
+      "expected_output": "Synthesized answer drawing from wiki/pages/concepts/authentication.md, wiki/pages/entities/auth-middleware.md, wiki/pages/decisions/jwt-vs-session.md, with proper citations like [[authentication]] §2 and [[jwt-vs-session]]",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "After researching different database options, I've decided to use PostgreSQL with SeaORM instead of SQLite. This is a significant architectural decision. Please create a decision page documenting this choice, including the alternatives considered (SQLite, MySQL, Diesel) and the rationale.",
+      "expected_output": "Decision page created at wiki/pages/decisions/use-postgresql-seaorm.md following the decision template with status, date, context, decision, rationale, consequences, and related pages",
+      "files": []
+    }
+  ]
+}
