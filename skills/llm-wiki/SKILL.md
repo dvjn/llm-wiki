@@ -40,7 +40,7 @@ wiki/
 Your curated collection of source documents. These are immutable — the LLM reads from them but never modifies them. This is your source of truth.
 
 **Naming convention**: `{type}-{short-title}.md`
-- Example: `spec-did-core.md`, `paper-fba-mazieres2016.md`, `article-postgres-indexing.md`
+- Example: `spec-rest-api.md`, `paper-consensus-raft.md`, `article-react-hooks.md`
 
 ### Wiki Pages (`wiki/pages/`)
 
@@ -66,7 +66,7 @@ A single source might touch 10-15 wiki pages. This is the compounding effect.
 ```markdown
 ## [YYYY-MM-DD] ingest | [Source Title]
 
-Added `raw/papers/paper-fba-mazieres2016.md`. Created source summary. Updated 8 concept pages (FBA, SCP, quorum-slice). Created 2 new entity pages (validator, quorum). Updated index.
+Added `raw/papers/paper-consensus-raft.md`. Created source summary. Updated 8 concept pages (consensus, leader-election, log-replication). Created 2 new entity pages (node, log-entry). Updated index.
 ```
 
 ### Query Workflow
@@ -98,7 +98,7 @@ The LLM proposes fixes and asks for confirmation before applying.
 ```markdown
 ## [YYYY-MM-DD] lint | Wiki lint pass
 
-Fixed 3 broken links. Created 2 stub concept pages for frequently mentioned terms. Noted 1 potential contradiction between [[concept-fba]] and [[concept-scp]] pages regarding safety guarantees. Suggested web search for "FBA open membership models".
+Fixed 3 broken links. Created 2 stub concept pages for frequently mentioned terms. Noted 1 potential contradiction between [[concept-consistency]] and [[concept-availability]] pages regarding CAP theorem tradeoffs. Suggested web search for "distributed consensus patterns".
 ```
 
 ## Page Templates
@@ -132,8 +132,8 @@ Each page type has a consistent structure. Follow these templates when creating 
 
 ## Sources
 
-- [[source-spec-did-core]] § section
-- [[source-paper-fba-mazieres2016]] § section
+- [[source-spec-rest-api]] § section
+- [[source-paper-consensus-raft]] § section
 ```
 
 ### Entity Page (`pages/entities/*.md`)
@@ -271,7 +271,7 @@ For concepts that need a page but lack full content, create a stub:
 
 ## Status
 
-Stub — needs expansion from sources: [[source-example-x]], [[source-example-y]]
+Stub — needs expansion from sources: [[source-spec-auth-flow]], [[source-paper-consensus-raft]]
 
 ## Initial Notes
 
@@ -284,12 +284,12 @@ All wiki links use a mandatory type prefix to prevent name collisions:
 
 - **Format**: `{type}-{name}` where type is one of: `concept`, `entity`, `decision`, `comparison`, `synthesis`, `source`
 - **Mandatory**: Every `[[...]]` link must have a type prefix — no exceptions
-- **Casing**: All lowercase with hyphens (e.g., `[[concept-did]]`, not `[[concept-DID]]`)
+- **Casing**: All lowercase with hyphens (e.g., `[[concept-authentication]]`, not `[[concept-Authentication]]`)
 - **Prefix position**: Always the first segment before the first hyphen
-- **Source links**: Use `[[source-filename]]` (e.g., `[[source-spec-did-core]]` — the `spec-` is part of the filename, `source-` is the type prefix)
-- **Comparison links**: The `vs` is part of the name (e.g., `[[comparison-did-fed-vs-did-web]]`)
+- **Source links**: Use `[[source-filename]]` (e.g., `[[source-spec-rest-api]]` — the `spec-` is part of the filename, `source-` is the type prefix)
+- **Comparison links**: The `vs` is part of the name (e.g., `[[comparison-postgres-vs-mysql]]`)
 
-**Why**: When multiple sources discuss overlapping topics, or when concepts and entities share names (e.g., "DID Document" as a concept vs. entity), the prefix prevents the LLM from mixing up links. Each type has its own namespace.
+**Why**: When multiple sources discuss overlapping topics, or when concepts and entities share names (e.g., "User" as a concept vs. entity), the prefix prevents the LLM from mixing up links. Each type has its own namespace.
 
 ## Index Structure
 

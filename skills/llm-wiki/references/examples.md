@@ -2,190 +2,188 @@
 
 Real-world examples of wiki pages from different domains.
 
-## Example 1: Concept Page (DID - Decentralized Identity)
+## Example 1: Concept Page (Rate Limiting)
 
 ```markdown
-# DID (Decentralized Identifier)
+# Rate Limiting
 
-> A globally unique persistent identifier that does not require a centralized registration authority.
+> A technique to control the rate of incoming requests to prevent resource exhaustion and abuse.
 
 ## Core Definition
 
-A DID is a URI composed of three parts: the `did:` scheme, a method identifier, and a method-specific string. Example: `did:fed:abc123`. DIDs are designed so the controller can prove control without permission from any central authority.
+Rate limiting restricts the number of requests a client can make within a specified time window. It protects services from being overwhelmed by too many requests, whether intentional (DDoS) or unintentional (misconfigured clients).
 
 ## Key Properties
 
-- **Scheme**: Always starts with `did:` per RFC 3986
-- **Method**: Identifies the DID method (e.g., `fed`, `key`, `web`)
-- **Persistence**: No renewal required; persistent by design
-- **Resolution**: Resolves to a DID Document through the method's Resolve operation
-- **Cryptographic verifiability**: Control proven without third-party permission
+- **Algorithm**: Token bucket, sliding window, or fixed window counter
+- **Scope**: Per-client, per-endpoint, or global
+- **Response**: HTTP 429 (Too Many Requests) when exceeded
+- **Headers**: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`
+- **Granularity**: Time window size (seconds, minutes, hours)
 
-## DID Syntax
+## In MyProject
 
-```
-did = "did:" method ":" method-specific-id
-method = 1*method-char
-method-char = ALPHA / DIGIT
-```
-
-## In didfed
-
-didfed implements the `did:fed` method. DIDs have format `did:fed:<id>` where `<id>` is a 32-character base32 identifier. Validation is in `crates/didfed-core/src/did.rs`.
+Implemented as a middleware layer using the token bucket algorithm. Rate limits are configured per endpoint in `config/rate_limits.yaml`. Burst allowance is set to 10% above steady-state limit.
 
 ## Related Concepts
 
-- [[concept-did-document]] — the document resolved from a DID
-- [[concept-did-method]] — implementation defining CRUD operations
-- [[concept-verification-method]] — cryptographic keys for proving control
+- [[concept-throttling]] — similar but focuses on slowing rather than rejecting
+- [[concept-circuit-breaker]] — protects downstream services from cascading failures
+- [[concept-backpressure]] — reactive approach to overload handling
 
 ## Sources
 
-- [[source-spec-did-core]] §3 Identifier
+- [[source-article-rate-limiting-patterns]] §2 Algorithms
+- [[source-spec-rest-api]] §4 Error Handling
 ```
 
-## Example 2: Entity Page (Validator)
+## Example 2: Entity Page (User Session)
 
 ```markdown
-# Validator
+# User Session
 
-> Participant in the FBA consensus layer, proposes and commits DID operations.
+> Represents an authenticated user's active interaction with the system.
 
 ## Purpose
 
-Validators form the distributed trust layer of didfed. They vote on DID operations using Federated Byzantine Agreement, ensuring agreement without requiring all validators to trust each other directly.
+Sessions track user state across multiple requests, maintaining authentication status, preferences, and temporary data without requiring re-authentication on each interaction.
 
 ## Structure
 
-```rust
-pub struct Validator {
-    pub id: NodeId,           // 32-byte Ed25519 public key
-    pub quorum_slice: QuorumSlice,  // Trust set for FBA
-    pub endpoint: Url,        // HTTP endpoint for consensus messages
+```json
+{
+  "session_id": "uuid",
+  "user_id": "integer",
+  "created_at": "timestamp",
+  "expires_at": "timestamp",
+  "data": {
+    "preferences": {},
+    "cart_items": []
+  }
 }
 ```
 
 ## Lifecycle
 
-1. **Creation**: Validator joins via governance vote
-2. **Operation**: Proposes DID ops, participates in FBA voting
-3. **Rotation**: Quorum slice can be updated by validator
-4. **Removal**: Tombstoned via consensus after governance decision
+1. **Creation**: Generated on successful authentication
+2. **Access**: Validated on each request, extended if close to expiry
+3. **Update**: Modified when user changes preferences or cart
+4. **Termination**: Expired automatically or manually on logout
 
 ## Code References
 
-- `crates/didfed-core/src/validator.rs` — Validator type
-- `crates/didfed-server/src/consensus/` — FBA implementation
+- `src/auth/session.rs` — Session type and validation logic
+- `src/middleware/session.rs` — Request session injection
 
 ## Related Entities
 
-- [[concept-quorum-slice]] — validator's chosen trust set
-- [[concept-federated-voting]] — vote procedure validators follow
+- [[entity-user]] — the user who owns this session
+- [[entity-authentication-token]] — JWT used to create session
 ```
 
 ## Example 3: Decision Page (ADR-style)
 
 ```markdown
-# Decision: Use FBA instead of BFT consensus
+# Decision: Use PostgreSQL with Connection Pooling
 
 **Status**: Accepted
 **Date**: 2026-04-01
-**Context**: Need consensus for DID operations across untrusted validators
+**Context**: Need database for user data with high read/write throughput
 
 ## Decision
 
-Use Federated Byzantine Agreement (FBA) instead of traditional BFT (like PBFT or HotStuff).
+Use PostgreSQL with PgBouncer connection pooling instead of a connection-per-request model.
 
 ## Rationale
 
-| Criterion | FBA | BFT (PBFT) |
-|-----------|-----|------------|
-| Open membership | Yes | No |
-| Validator autonomy | High | Low |
-| Quorum flexibility | Per-node slices | Fixed 2f+1 |
-| Throughput | Moderate | High |
+| Criterion | Connection Pool | Direct Connections |
+|-----------|-----------------|-------------------|
+| Connection overhead | Low (reuse) | High (new each request) |
+| Memory usage | Constant | Linear with requests |
+| Latency | Lower (warm connections) | Higher (handshake each time) |
+| Complexity | Moderate (pool management) | Simple |
 
-FBA matches our goal of allowing organizations to join the federation without requiring global trust. Each validator chooses its own quorum slice.
+Connection pooling reduces connection overhead from ~35ms per connection to ~1ms for pooled reuse. With expected 500 concurrent requests, direct connections would exceed PostgreSQL's default 100 connection limit.
 
 ## Consequences
 
-- **Positive**: Open federation, no central authority for validator set
-- **Positive**: Organizations can maintain their own trust policies
-- **Negative**: Lower throughput than optimized BFT
-- **Risk**: Quorum intersection requires careful configuration
+- **Positive**: Handles 5x more concurrent requests with same PostgreSQL config
+- **Positive**: Lower latency for database operations
+- **Negative**: Pool sizing requires tuning based on actual load patterns
+- **Risk**: Pool exhaustion if transaction hold times increase unexpectedly
 
 ## Related
 
-- [[concept-federated-byzantine-agreement]] — concept page
-- [[concept-stellar-consensus-protocol]] — specific FBA construction used
+- [[concept-connection-pooling]] — concept page
+- [[comparison-postgres-vs-mysql]] — database choice comparison
 ```
 
 ## Example 4: Comparison Page
 
 ```markdown
-# did:fed vs did:web
+# PostgreSQL vs MySQL
 
-> Distributed FBA consensus vs DNS/TLS web infrastructure trust
+> Two popular open-source relational databases with different strengths
 
 ## Dimensions
 
-| Dimension | did:fed | did:web | didfed position |
-|-----------|---------|---------|-----------------|
-| Trust model | FBA consensus | DNS + TLS | FBA for distributed trust |
-| Update latency | ~seconds | ~minutes (DNS TTL) | Faster updates |
-| Infrastructure | Federation of validators | Standard web server | Requires validator network |
-| Key rotation | On-chain via consensus | Off-chain, manual | Automated rotation |
-| Censorship resistance | High (distributed) | Low (single server) | Resilient to single points |
+| Dimension | PostgreSQL | MySQL | Project Position |
+|-----------|------------|-------|------------------|
+| JSON support | Native JSONB, indexed | JSON type, limited indexing | PostgreSQL for JSON queries |
+| Extensibility | Extensions, custom types | Plugins, limited | PostgreSQL for flexibility |
+| Replication | Multiple modes built-in | Requires setup | Both viable |
+| MVCC | Full implementation | Limited | PostgreSQL for consistency |
+| Community | Strong enterprise focus | Strong web focus | MySQL for simpler web apps |
 
 ## Analysis
 
-did:web is simpler — just host a DID Document at a well-known URL. But it inherits all the trust assumptions of the web: DNS registrars, certificate authorities, web hosting providers.
+PostgreSQL offers richer features (JSONB, window functions, custom types) and stricter consistency. MySQL is simpler to configure and more common in web hosting.
 
-did:fed trades simplicity for resilience. No single entity can revoke or censor a DID. Updates require consensus among validators.
+For projects requiring complex queries, JSON operations, or strict consistency guarantees, PostgreSQL is superior. For simple CRUD web apps with predictable schemas, MySQL is often sufficient.
 
 ## When to use each
 
-- **did:web**: Personal sites, small projects, when simplicity matters
-- **did:fed**: Organizations, consortiums, when distributed trust matters
+- **PostgreSQL**: Complex queries, JSON-heavy data, analytical workloads, strict consistency
+- **MySQL**: Simple web apps, existing MySQL expertise, hosting constraints
 
 ## Sources
 
-- [[source-spec-did-web]] — did:web method specification
-- [[comparison-did-fed-vs-did-key]] — comparison with simpler method
+- [[source-article-postgres-features]] — PostgreSQL capabilities
+- [[source-comparison-db-choice]] — database selection guide
 ```
 
 ## Example 5: Source Summary Page
 
 ```markdown
-# Source: Stellar Consensus Protocol (Mazières 2016)
+# Source: Raft Consensus Algorithm (Ongaro 2014)
 
 **Type**: paper
-**URL**: https://www.stellar.org/papers/stellar-consensus-protocol.pdf
+**URL**: https://raft.github.io/raft.pdf
 **Date Added**: 2026-04-09
-**Key Sections**: §3 FBA, §4 SCP construction, §5 Safety proof
+**Key Sections**: §3 Leader Election, §4 Log Replication, §5 Safety
 
 ## Summary
 
-Mazières introduces Federated Byzantine Agreement (FBA), a consensus model where nodes choose their own trust sets (quorum slices) rather than relying on a global validator set. The Stellar Consensus Protocol (SCP) is a specific construction of FBA achieving safety and liveness without requiring all nodes to agree on membership.
+Ongaro and Ousterhout present Raft, a consensus algorithm designed for understandability. It achieves the same safety guarantees as Paxos but with a clearer mental model: leader-based log replication with heartbeats for leader election.
 
 ## Key Extracts
 
-> "FBA allows each node to choose its own quorum slices. Quorums are formed from the union of slices."
+> "Raft decomposes consensus into three relatively independent subproblems: leader election, log replication, and safety."
 
-> "SCP guarantees safety if quorum intersection holds, and liveness if correct nodes form a quorum."
+> "The leader accepts log entries from clients, replicates them to other servers, and tells servers when to apply entries to their state machines."
 
-> "Open membership: nodes can join without central approval."
+> "Raft uses a randomized election timeout to reduce likelihood of split votes."
 
 ## Related Concepts
 
-- [[concept-federated-byzantine-agreement]] — the FBA model
-- [[concept-stellar-consensus-protocol]] — SCP specifically
-- [[concept-quorum-slice]] — trust sets in FBA
-- [[concept-federated-voting]] — vote/accept/confirm procedure
+- [[concept-consensus]] — distributed agreement
+- [[concept-leader-election]] — selecting the coordinator node
+- [[concept-log-replication]] — maintaining consistency across nodes
+- [[concept-split-brain]] — failure mode to avoid
 
-## Impact on didfed
+## Impact on Project
 
-FBA is the foundation of didfed's trust model. We use SCP-style federated voting for DID operation consensus. The quorum slice design allows organizations to maintain their own trust policies while participating in the federation.
+Raft is the foundation for our distributed state machine. We use Raft's leader election with 150-300ms randomized timeouts. Log replication handles configuration changes and user state transitions.
 ```
 
 ## Example 6: Index Page
@@ -197,30 +195,31 @@ FBA is the foundation of didfed's trust model. We use SCP-style federated voting
 
 ## Concepts
 
-- [[concept-did]] — Decentralized Identifier
-- [[concept-did-document]] — Document resolved from a DID
-- [[concept-fba]] — Federated Byzantine Agreement
-- [[concept-scp]] — Stellar Consensus Protocol
-- [[concept-cid]] — Content-addressed identifier
+- [[concept-rate-limiting]] — Request throttling technique
+- [[concept-connection-pooling]] — Database connection management
+- [[concept-consensus]] — Distributed agreement protocols
+- [[concept-leader-election]] — Coordinator selection in distributed systems
+- [[concept-authentication]] — Identity verification
 
 ## Entities
 
-- [[entity-validator]] — Consensus participant
-- [[entity-did-document]] — DID Document in code
+- [[entity-user-session]] — Active user interaction state
+- [[entity-api-key]] — Authentication credential for API access
 
 ## Decisions
 
-- [[decision-use-fba-not-bft]] — Why we chose FBA consensus
+- [[decision-use-postgres-pooling]] — Why we chose connection pooling
+- [[decision-rate-limit-algorithm]] — Token bucket vs sliding window
 
 ## Comparisons
 
-- [[comparison-did-fed-vs-did-web]] — vs did:web method
-- [[comparison-did-fed-vs-did-key]] — vs did:key method
+- [[comparison-postgres-vs-mysql]] — Database selection trade-offs
+- [[comparison-jwt-vs-session]] — Authentication approach comparison
 
 ## Sources
 
-- [[source-spec-did-core]] — W3C DID Core
-- [[source-stellar-scp]] — Mazières 2016 paper
+- [[source-paper-raft-consensus]] — Ongaro 2014
+- [[source-spec-rest-api]] — REST design guidelines
 
 ## Statistics
 
@@ -235,13 +234,13 @@ FBA is the foundation of didfed's trust model. We use SCP-style federated voting
 ## Example 7: Log Entry
 
 ```markdown
-## [2026-04-09] ingest | W3C DID Core
+## [2026-04-09] ingest | Raft Consensus Paper
 
-Added `raw/specs/spec-did-core.md`. Created source summary. Created 5 concept pages (did, did-document, verification-method, did-method, did-url). Created 2 entity pages (validator, verification-method-entity). Updated index.
+Added `raw/papers/paper-raft-consensus.md`. Created source summary. Created 5 concept pages (consensus, leader-election, log-replication, split-brain, safety). Created 2 entity pages (leader-node, follower-node). Updated index.
 
 ---
 
 ## [2026-04-09] lint | Wiki lint pass
 
-Fixed 4 broken links. Created 3 stub concept pages for missing concepts. Clarified FBA open/closed membership distinction. Updated index (29 pages, 18 concepts).
+Fixed 4 broken links. Created 3 stub concept pages for missing concepts. Clarified distinction between rate limiting and throttling. Updated index (29 pages, 18 concepts).
 ```
