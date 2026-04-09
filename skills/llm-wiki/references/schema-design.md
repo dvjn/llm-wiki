@@ -83,11 +83,11 @@ Customize the templates for your domain:
 
 ## Related Concepts
 
-- [[related]] — relationship
+- [[concept-related]] — relationship
 
 ## Sources
 
-- [[source:filename]] § section
+- [[source-filename]] § section
 ```
 ```
 
@@ -127,7 +127,7 @@ Define when to create links and new pages:
 
 - Always link when mentioning a concept with its own page
 - Create a stub if concept appears 3+ times without a page
-- Link to sources with `[[source:filename]]`
+- Link to sources with `[[source-filename]]`
 
 ### When to Create New Pages
 

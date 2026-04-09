@@ -98,7 +98,7 @@ The LLM proposes fixes and asks for confirmation before applying.
 ```markdown
 ## [YYYY-MM-DD] lint | Wiki lint pass
 
-Fixed 3 broken links. Created 2 stub concept pages for frequently mentioned terms. Noted 1 potential contradiction between [[FBA]] and [[SCP]] pages regarding safety guarantees. Suggested web search for "FBA open membership models".
+Fixed 3 broken links. Created 2 stub concept pages for frequently mentioned terms. Noted 1 potential contradiction between [[concept-fba]] and [[concept-scp]] pages regarding safety guarantees. Suggested web search for "FBA open membership models".
 ```
 
 ## Page Templates
@@ -127,13 +127,13 @@ Each page type has a consistent structure. Follow these templates when creating 
 
 ## Related Concepts
 
-- [[related-concept-1]] — relationship description
-- [[related-concept-2]] — relationship description
+- [[concept-related-1]] — relationship description
+- [[concept-related-2]] — relationship description
 
 ## Sources
 
-- [[source:spec-did-core]] § section
-- [[source:paper-fba-mazieres2016]] § section
+- [[source-spec-did-core]] § section
+- [[source-paper-fba-mazieres2016]] § section
 ```
 
 ### Entity Page (`pages/entities/*.md`)
@@ -157,8 +157,8 @@ Each page type has a consistent structure. Follow these templates when creating 
 
 ## Related Entities
 
-- [[entity-1]] — relationship
-- [[entity-2]] — relationship
+- [[entity-related-1]] — relationship
+- [[entity-related-2]] — relationship
 ```
 
 ### Decision Page (`pages/decisions/*.md`)
@@ -186,8 +186,8 @@ Each page type has a consistent structure. Follow these templates when creating 
 
 ## Related
 
-- [[decision-other]] — related decision
-- [[concept-x]] — relevant concept
+- [[decision-related-decision]] — related decision
+- [[concept-related-concept]] — relevant concept
 ```
 
 ### Comparison Page (`pages/comparisons/*.md`)
@@ -210,8 +210,8 @@ Each page type has a consistent structure. Follow these templates when creating 
 
 ## Sources
 
-- [[source:spec-method-a]]
-- [[source:spec-method-b]]
+- [[source-spec-method-a]]
+- [[source-spec-method-b]]
 ```
 
 ### Source Summary Page (`pages/sources/*.md`)
@@ -234,8 +234,8 @@ Each page type has a consistent structure. Follow these templates when creating 
 
 ## Related Concepts
 
-- [[concept-1]] — how this source informs it
-- [[concept-2]] — how this source informs it
+- [[concept-related-1]] — how this source informs it
+- [[concept-related-2]] — how this source informs it
 
 ## Impact
 
@@ -250,7 +250,7 @@ Use `[[page-name]]` syntax (Obsidian-compatible) for internal wiki links:
 
 - **Always** link when mentioning a concept/entity that has its own page
 - **Create** a new page (stub) if a concept appears 3+ times across sources but has no page
-- **Link to sources** using `[[source:filename]]` syntax
+- **Link to sources** using `[[source-filename]]` syntax
 
 ### When to Create New Pages
 
@@ -271,12 +271,25 @@ For concepts that need a page but lack full content, create a stub:
 
 ## Status
 
-Stub — needs expansion from sources: [[source:x]], [[source:y]]
+Stub — needs expansion from sources: [[source-example-x]], [[source-example-y]]
 
 ## Initial Notes
 
 [Brief notes from current understanding]
 ```
+
+### Link Prefix System
+
+All wiki links use a mandatory type prefix to prevent name collisions:
+
+- **Format**: `{type}-{name}` where type is one of: `concept`, `entity`, `decision`, `comparison`, `synthesis`, `source`
+- **Mandatory**: Every `[[...]]` link must have a type prefix — no exceptions
+- **Casing**: All lowercase with hyphens (e.g., `[[concept-did]]`, not `[[concept-DID]]`)
+- **Prefix position**: Always the first segment before the first hyphen
+- **Source links**: Use `[[source-filename]]` (e.g., `[[source-spec-did-core]]` — the `spec-` is part of the filename, `source-` is the type prefix)
+- **Comparison links**: The `vs` is part of the name (e.g., `[[comparison-did-fed-vs-did-web]]`)
+
+**Why**: When multiple sources discuss overlapping topics, or when concepts and entities share names (e.g., "DID Document" as a concept vs. entity), the prefix prevents the LLM from mixing up links. Each type has its own namespace.
 
 ## Index Structure
 
@@ -291,32 +304,32 @@ Stub — needs expansion from sources: [[source:x]], [[source:y]]
 
 Domain concepts that appear across multiple sources.
 
-- [[concept-name]] — one-line description
-- [[another-concept]] — one-line description
+- [[concept-example-name]] — one-line description
+- [[concept-another-example]] — one-line description
 
 ## Entities
 
 Concrete things in the system.
 
-- [[entity-name]] — one-line description
+- [[entity-example-name]] — one-line description
 
 ## Decisions
 
 Design decisions with rationale.
 
-- [[decision-name]] — one-line description
+- [[decision-example-name]] — one-line description
 
 ## Comparisons
 
 Trade-off analyses.
 
-- [[comparison-name]] — one-line description
+- [[comparison-example-name]] — one-line description
 
 ## Sources
 
 Per-source summaries.
 
-- [[source:filename]] — one-line description
+- [[source-filename]] — one-line description
 
 ## Statistics
 

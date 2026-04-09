@@ -35,13 +35,13 @@ didfed implements the `did:fed` method. DIDs have format `did:fed:<id>` where `<
 
 ## Related Concepts
 
-- [[did-document]] — the document resolved from a DID
-- [[did-method]] — implementation defining CRUD operations
-- [[verification-method]] — cryptographic keys for proving control
+- [[concept-did-document]] — the document resolved from a DID
+- [[concept-did-method]] — implementation defining CRUD operations
+- [[concept-verification-method]] — cryptographic keys for proving control
 
 ## Sources
 
-- [[spec-did-core]] §3 Identifier
+- [[source-spec-did-core]] §3 Identifier
 ```
 
 ## Example 2: Entity Page (Validator)
@@ -79,8 +79,8 @@ pub struct Validator {
 
 ## Related Entities
 
-- [[quorum-slice]] — validator's chosen trust set
-- [[federated-voting]] — vote procedure validators follow
+- [[concept-quorum-slice]] — validator's chosen trust set
+- [[concept-federated-voting]] — vote procedure validators follow
 ```
 
 ## Example 3: Decision Page (ADR-style)
@@ -116,8 +116,8 @@ FBA matches our goal of allowing organizations to join the federation without re
 
 ## Related
 
-- [[federated-byzantine-agreement]] — concept page
-- [[stellar-consensus-protocol]] — specific FBA construction used
+- [[concept-federated-byzantine-agreement]] — concept page
+- [[concept-stellar-consensus-protocol]] — specific FBA construction used
 ```
 
 ## Example 4: Comparison Page
@@ -150,8 +150,8 @@ did:fed trades simplicity for resilience. No single entity can revoke or censor 
 
 ## Sources
 
-- [[spec-did-web]] — did:web method specification
-- [[did-fed-vs-did-key]] — comparison with simpler method
+- [[source-spec-did-web]] — did:web method specification
+- [[comparison-did-fed-vs-did-key]] — comparison with simpler method
 ```
 
 ## Example 5: Source Summary Page
@@ -178,10 +178,10 @@ Mazières introduces Federated Byzantine Agreement (FBA), a consensus model wher
 
 ## Related Concepts
 
-- [[federated-byzantine-agreement]] — the FBA model
-- [[stellar-consensus-protocol]] — SCP specifically
-- [[quorum-slice]] — trust sets in FBA
-- [[federated-voting]] — vote/accept/confirm procedure
+- [[concept-federated-byzantine-agreement]] — the FBA model
+- [[concept-stellar-consensus-protocol]] — SCP specifically
+- [[concept-quorum-slice]] — trust sets in FBA
+- [[concept-federated-voting]] — vote/accept/confirm procedure
 
 ## Impact on didfed
 
@@ -197,30 +197,30 @@ FBA is the foundation of didfed's trust model. We use SCP-style federated voting
 
 ## Concepts
 
-- [[DID]] — Decentralized Identifier
-- [[DID-Document]] — Document resolved from a DID
-- [[FBA]] — Federated Byzantine Agreement
-- [[SCP]] — Stellar Consensus Protocol
-- [[CID]] — Content-addressed identifier
+- [[concept-did]] — Decentralized Identifier
+- [[concept-did-document]] — Document resolved from a DID
+- [[concept-fba]] — Federated Byzantine Agreement
+- [[concept-scp]] — Stellar Consensus Protocol
+- [[concept-cid]] — Content-addressed identifier
 
 ## Entities
 
-- [[validator]] — Consensus participant
-- [[did-document-entity]] — DID Document in code
+- [[entity-validator]] — Consensus participant
+- [[entity-did-document]] — DID Document in code
 
 ## Decisions
 
-- [[use-fba-not-bft]] — Why we chose FBA consensus
+- [[decision-use-fba-not-bft]] — Why we chose FBA consensus
 
 ## Comparisons
 
-- [[did-fed-vs-did-web]] — vs did:web method
-- [[did-fed-vs-did-key]] — vs did:key method
+- [[comparison-did-fed-vs-did-web]] — vs did:web method
+- [[comparison-did-fed-vs-did-key]] — vs did:key method
 
 ## Sources
 
-- [[spec-did-core]] — W3C DID Core
-- [[stellar-scp]] — Mazières 2016 paper
+- [[source-spec-did-core]] — W3C DID Core
+- [[source-stellar-scp]] — Mazières 2016 paper
 
 ## Statistics
 

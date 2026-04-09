@@ -22,13 +22,13 @@
     {
       "id": 4,
       "prompt": "I need to understand how authentication works in my system. Looking at my wiki, can you query the relevant pages and give me a synthesis of how authentication is implemented, what concepts are involved, and what design decisions were made?",
-      "expected_output": "Synthesized answer drawing from wiki/pages/concepts/authentication.md, wiki/pages/entities/auth-middleware.md, wiki/pages/decisions/jwt-vs-session.md, with proper citations like [[authentication]] §2 and [[jwt-vs-session]]",
+      "expected_output": "Synthesized answer drawing from wiki/pages/concepts/concept-authentication.md, wiki/pages/entities/entity-auth-middleware.md, wiki/pages/decisions/decision-jwt-vs-session.md, with proper citations like [[concept-authentication]] §2 and [[decision-jwt-vs-session]]",
       "files": []
     },
     {
       "id": 5,
       "prompt": "After researching different database options, I've decided to use PostgreSQL with SeaORM instead of SQLite. This is a significant architectural decision. Please create a decision page documenting this choice, including the alternatives considered (SQLite, MySQL, Diesel) and the rationale.",
-      "expected_output": "Decision page created at wiki/pages/decisions/use-postgresql-seaorm.md following the decision template with status, date, context, decision, rationale, consequences, and related pages",
+      "expected_output": "Decision page created at wiki/pages/decisions/decision-use-postgresql-seaorm.md following the decision template with status, date, context, decision, rationale, consequences, and related pages",
       "files": []
     }
   ]
