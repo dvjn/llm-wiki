@@ -10,6 +10,7 @@ Wiki health check.
 4. Identify frequently mentioned terms without pages
 5. Find missing cross-references
 6. Surface research gaps
+7. Check AGENTS.md for the "Knowledge Base - Wiki" section. If missing, suggest adding it (see templates/agents-md-wiki-section.md).
 
 Propose fixes; ask confirmation before applying non-trivial changes.
 
@@ -27,5 +28,5 @@ Append to log.md: `## [YYYY-MM-DD] lint | Wiki health check`
 ```markdown
 ## [YYYY-MM-DD] lint | Wiki health check
 
-Fixed N broken links. Created N stub pages. Noted N contradictions. Suggested N research gaps.
+Fixed N broken links. Created N stub pages. Noted N contradictions. Suggested N research gaps. AGENTS.md wiki section: present/missing.
 ```
