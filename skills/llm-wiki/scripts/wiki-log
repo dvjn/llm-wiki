@@ -1,0 +1,103 @@
+#!/bin/bash
+# wiki-log - Append standardized entries to wiki/log.md
+# Usage: wiki-log ingest <source-title> <summary>
+#        wiki-log lint <summary>
+#        wiki-log synthesis <page-type> <page-name> <summary>
+#
+# Examples:
+#   wiki-log ingest "Paper: Raft Consensus" "Added source summary. Updated 3 concepts."
+#   wiki-log lint "Fixed 2 broken links. Created 1 stub."
+#   wiki-log synthesis concept "new-architecture" "Created synthesis from 4 sources."
+
+set -e
+
+WIKI_DIR="${WIKI_DIR:-wiki}"
+LOG_FILE="${WIKI_DIR}/log.md"
+
+COMMAND="$1"
+DATE="${DATE:-$(date +%Y-%m-%d)}"
+
+case "$COMMAND" in
+    ingest)
+        TITLE="$2"
+        SUMMARY="$3"
+        
+        if [ -z "$TITLE" ] || [ -z "$SUMMARY" ]; then
+            echo "Usage: wiki-log ingest <source-title> <summary>"
+            exit 1
+        fi
+        
+        ENTRY="## [${DATE}] ingest | ${TITLE}
+
+${SUMMARY}"
+        ;;
+    
+    lint)
+        SUMMARY="$2"
+        
+        if [ -z "$SUMMARY" ]; then
+            echo "Usage: wiki-log lint <summary>"
+            exit 1
+        fi
+        
+        ENTRY="## [${DATE}] lint | Wiki health check
+
+${SUMMARY}"
+        ;;
+    
+    synthesis)
+        PAGE_TYPE="$2"
+        PAGE_NAME="$3"
+        SUMMARY="$4"
+        
+        if [ -z "$PAGE_TYPE" ] || [ -z "$PAGE_NAME" ] || [ -z "$SUMMARY" ]; then
+            echo "Usage: wiki-log synthesis <type> <name> <summary>"
+            exit 1
+        fi
+        
+        ENTRY="## [${DATE}] synthesis | ${PAGE_TYPE}-${PAGE_NAME}
+
+${SUMMARY}"
+        ;;
+    
+    refactor)
+        SUMMARY="$2"
+        
+        if [ -z "$SUMMARY" ]; then
+            echo "Usage: wiki-log refactor <summary>"
+            exit 1
+        fi
+        
+        ENTRY="## [${DATE}] refactor | ${SUMMARY}"
+        ;;
+    
+    *)
+        echo "Usage: wiki-log <command> [args]"
+        echo "Commands:"
+        echo "  ingest <title> <summary>      - Log source ingest"
+        echo "  lint <summary>                - Log lint pass"
+        echo "  synthesis <type> <name> <sum> - Log synthesis filing"
+        echo "  refactor <summary>            - Log refactoring"
+        exit 1
+        ;;
+esac
+
+# Ensure log file exists
+if [ ! -f "$LOG_FILE" ]; then
+    echo "# Wiki Log" > "$LOG_FILE"
+    echo "" >> "$LOG_FILE"
+    echo "Append-only record of wiki operations." >> "$LOG_FILE"
+    echo "" >> "$LOG_FILE"
+fi
+
+# Append entry with separator
+if [ -s "$LOG_FILE" ]; then
+    echo "" >> "$LOG_FILE"
+fi
+echo "---" >> "$LOG_FILE"
+echo "" >> "$LOG_FILE"
+echo "$ENTRY" >> "$LOG_FILE"
+
+echo "Logged to $LOG_FILE"
+echo ""
+echo "$ENTRY"

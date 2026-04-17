@@ -1,10 +1,8 @@
 # Page Templates
 
-Use these templates when creating or substantially rewriting wiki pages.
+**Only load the template for the page type you're creating.**
 
-## Concept Page
-
-Path: `pages/concepts/*.md`
+## Concept Page (`pages/concepts/`)
 
 ```markdown
 # [Concept Name]
@@ -12,32 +10,22 @@ Path: `pages/concepts/*.md`
 > Brief one-line definition
 
 ## Core Definition
-
-[2-3 sentences defining the concept precisely]
+[2-3 sentences]
 
 ## Key Properties
+- Property: explanation
 
-- Property 1: explanation
-- Property 2: explanation
-
-## In [Your Domain]
-
-[How this concept manifests in your specific domain - implementation notes, examples]
+## In [Domain]
+[How this manifests]
 
 ## Related Concepts
-
-- [[concept-related-1]] - relationship description
-- [[concept-related-2]] - relationship description
+- [[concept-x]] - relationship
 
 ## Sources
-
-- [[source-spec-rest-api]] § section
-- [[source-paper-consensus-raft]] § section
+- [[source-name]] § section
 ```
 
-## Entity Page
-
-Path: `pages/entities/*.md`
+## Entity Page (`pages/entities/`)
 
 ```markdown
 # [Entity Name]
@@ -45,124 +33,83 @@ Path: `pages/entities/*.md`
 > One-line role description
 
 ## Purpose
-
-[What this entity does in the system]
+[What it does]
 
 ## Structure
-
-[Fields, properties, data shape]
+[Fields, properties]
 
 ## Lifecycle
+[Creation, updates, destruction]
 
-[How this entity is created, updated, destroyed]
-
-## Related Entities
-
-- [[entity-related-1]] - relationship
-- [[entity-related-2]] - relationship
+## Related
+- [[entity-x]] - relationship
 ```
 
-## Decision Page
-
-Path: `pages/decisions/*.md`
+## Decision Page (`pages/decisions/`)
 
 ```markdown
-# Decision: [Short Title]
+# Decision: [Title]
 
 **Status**: Accepted | Proposed | Superseded
 **Date**: YYYY-MM-DD
-**Context**: [What triggered this decision]
+**Context**: [What triggered this]
 
 ## Decision
-
-[The choice made]
+[The choice]
 
 ## Rationale
-
-[Why this choice - alternatives considered, trade-offs]
+[Why - alternatives, trade-offs]
 
 ## Consequences
-
 - Positive: ...
 - Negative: ...
 - Risks: ...
 
 ## Related
-
-- [[decision-related-decision]] - related decision
-- [[concept-related-concept]] - relevant concept
+- [[decision-x]], [[concept-x]]
 ```
 
-## Comparison Page
-
-Path: `pages/comparisons/*.md`
+## Comparison Page (`pages/comparisons/`)
 
 ```markdown
 # [A] vs [B]
 
-> Brief summary of the comparison
+> Brief summary
 
 ## Dimensions
-
-| Dimension | [A] | [B] | Position |
-|-----------|-----|-----|----------|
-| X | ... | ... | ... |
-| Y | ... | ... | ... |
+| Dimension | [A] | [B] |
+|-----------|-----|-----|
+| X         | ... | ... |
 
 ## Analysis
-
-[Synthesis of trade-offs, when each is appropriate]
+[Trade-offs, when each fits]
 
 ## Sources
-
-- [[source-spec-method-a]]
-- [[source-spec-method-b]]
+- [[source-a]], [[source-b]]
 ```
 
-## Source Summary Page
-
-Path: `pages/sources/*.md`
+## Source Summary (`pages/sources/`)
 
 ```markdown
 # Source: [Title]
 
 **Type**: spec | paper | article
-**URL**: [original URL if web source]
+**URL**: [if web source]
 **Date Added**: YYYY-MM-DD
-**Key Sections**: §1, §2, §3
 
 ## Summary
-
-[3-5 sentence summary of the source's main contribution]
+[3-5 sentences]
 
 ## Key Extracts
-
-> [Direct quotes or paraphrased key points]
+> [Direct quotes or key points]
 
 ## Related Concepts
-
-- [[concept-related-1]] - how this source informs it
-- [[concept-related-2]] - how this source informs it
+- [[concept-x]] - how this informs it
 
 ## Impact
-
-[How this source influenced understanding or decisions]
+[How this changed understanding]
 ```
 
 ## Stub Page
 
-Use when a concept needs a page but cannot yet be fully developed.
-
-```markdown
-# [Concept Name]
-
-> [Brief definition from first mention]
-
-## Status
-
-Stub - needs expansion from sources: [[source-spec-auth-flow]], [[source-paper-consensus-raft]]
-
-## Initial Notes
-
-[Brief notes from current understanding]
-```
+Use when concept is important but underdeveloped. See `references/conventions.md` §Stub Pages.

@@ -5,75 +5,66 @@ description: Build and maintain a knowledge wiki using LLMs. This skill manages 
 
 # LLM Wiki Skill
 
-Build and maintain a knowledge wiki using LLMs. The wiki is a persistent, compounding artifact that sits between you and your raw sources.
+Build and maintain a knowledge wiki using LLMs. The wiki accumulates understanding over time. You curate sources; the LLM writes and maintains pages.
 
-## Core Philosophy
+## ⚠️ LAZY LOADING REQUIREMENT
 
-Traditional RAG retrieves from raw documents on every query. A wiki is different: the LLM incrementally builds and maintains a structured knowledge base that accumulates understanding. Cross-references are already there. Contradictions are already flagged. The synthesis reflects everything you've read.
+**Only load references when explicitly needed. Never read all references.**
 
-Key principle: The LLM writes the wiki. You curate sources and ask questions. The tedious bookkeeping is handled automatically.
+| Task    | Load Only This                                           |
+|---------|----------------------------------------------------------|
+| Ingest  | `references/ingest.md`                                    |
+| Query   | `references/query.md`                                     |
+| Lint    | `references/lint.md`                                     |
+| Setup   | `references/wiki-setup.md` (never otherwise)             |
+| Create  | `references/page-templates.md` (load ONE template only) |
 
-## Three-Layer Architecture
+**Violations:** Loading conventions.md for query, loading wiki-setup.md when wiki exists, reading all 6 templates when creating one page.
 
-```text
-wiki/
-├── raw/                    # Immutable source documents (never modified)
-│   ├── specs/             # Formal standards, W3C specs, IETF drafts
-│   ├── papers/            # Academic papers
-│   ├── articles/          # Blog posts, tutorials, informal sources
-│   └── assets/            # Images downloaded from web sources
-│
-├── pages/                  # LLM-generated wiki pages
-│   ├── concepts/          # Domain concepts appearing across sources
-│   ├── entities/          # Concrete things in your domain
-│   ├── decisions/         # Design decisions (ADR-style)
-│   ├── comparisons/       # Trade-off analyses
-│   ├── synthesis/         # Evolving thesis, open questions
-│   └── sources/           # Per-source summaries
-│
-├── index.md               # Content catalog (auto-updated)
-└── log.md                 # Chronological activity log (append-only)
+## Directory Structure
+
 ```
-
-Raw sources are immutable. The LLM reads them but never modifies them.
+wiki/
+├── raw/           # Immutable sources (read only)
+├── pages/         # LLM-generated pages (concepts/, entities/, decisions/, comparisons/, synthesis/, sources/)
+├── index.md       # Content catalog
+└── log.md         # Append-only changelog
+```
 
 ## Global Rules
 
-- Use type-prefixed wiki links everywhere: `[[concept-name]]`, `[[entity-name]]`, `[[decision-name]]`, `[[comparison-name]]`, `[[synthesis-name]]`, `[[source-name]]`.
-- Keep all page names lowercase with hyphens.
-- Update `index.md` whenever pages are created, renamed, or materially repurposed.
-- Append to `log.md` for every ingest, lint pass, and substantial filed synthesis.
-- Create stub pages when a concept clearly needs its own page but cannot yet be fully synthesized.
+- Links: `[[type-name]]` with prefix (concept, entity, decision, comparison, synthesis, source)
+- Names: lowercase with hyphens
+- Update `index.md` on page create/rename/material change
+- Append to `log.md` on ingest, lint, and substantial synthesis
+- Create stubs for important but underdeveloped concepts
+- **Prefer helper scripts over manual file editing** — scripts enforce naming conventions and formatting automatically
 
-Read [references/conventions.md](references/conventions.md) for naming, link, stub, cross-reference, and index rules.
+## Helper Scripts
+
+Use these scripts to reduce repetitive work:
+
+| Script                      | Purpose                           | Usage                                    |
+| --------------------------- | --------------------------------- | ---------------------------------------- |
+| `scripts/wiki-new-page`       | Create pages with correct format  | `wiki-new-page <type> <name>`             |
+| `scripts/wiki-update-index`   | Add/remove index entries          | `wiki-update-index add <type> <name> <desc>` |
+| `scripts/wiki-log`            | Append standardized log entries   | `wiki-log ingest <title> <summary>`       |
+
+**Always prefer scripts over manual file editing.** Scripts enforce naming conventions and formatting automatically.
 
 ## Workflow Routing
 
-Start here, then load the workflow reference that matches the task.
-
 ### Ingest
-
-Use when a new source is being added to `wiki/raw/` or when an existing source needs to be folded into the wiki. The ingest workflow creates a source summary, updates affected concept/entity/decision/comparison pages, updates the catalog, and logs the change.
-
-Read [references/ingest.md](references/ingest.md).
+New source → fold into wiki. Read `references/ingest.md`. Uses `scripts/wiki-new-page`, `scripts/wiki-update-index`, `scripts/wiki-log`.
 
 ### Query
-
-Use when answering a question from the existing wiki. The query workflow starts from `index.md`, reads only the pages needed, answers with wiki-style citations, and offers to file substantial synthesis back into the wiki (filing directly when clearly durable).
-
-Read [references/query.md](references/query.md).
+Answer from wiki. Read `references/query.md`. Suggest filing answers with `scripts/wiki-*`.
 
 ### Lint
+Health check. Read `references/lint.md`. Uses `scripts/wiki-log`.
 
-Use when health-checking the wiki for contradictions, stale claims, orphan pages, missing pages, missing links, and research gaps. Linting proposes or applies maintenance work and records the pass in `log.md`.
+### Setup
+Initialize new wiki. Read `references/wiki-setup.md`.
 
-Read [references/lint.md](references/lint.md).
-
-## Shared References
-
-- Read [references/page-templates.md](references/page-templates.md) when creating or expanding wiki pages.
-- Read [references/wiki-setup.md](references/wiki-setup.md) when setting up a new wiki, adapting the default folder structure, or creating a project-specific schema file.
-
-## Why This Works
-
-The tedious part of maintaining a knowledge base is not the reading or the thinking. It is the bookkeeping: updating cross-references, keeping summaries current, noting when new data contradicts old claims, and maintaining consistency across dozens of pages. Humans abandon wikis because the maintenance burden grows faster than the value. LLMs can touch many files in one pass and keep the wiki maintained at near-zero marginal cost.
+### Create Pages
+Need a template. Read `references/page-templates.md` and load ONLY the template for the page type you're creating.

@@ -1,45 +1,38 @@
 # Ingest Workflow
 
-Use this workflow when a new source is added to `wiki/raw/` or when an existing source needs to be folded into the wiki.
-
-Also read [page-templates.md](page-templates.md) for page structures and [conventions.md](conventions.md) for naming, links, stub rules, and index conventions.
+New source in `wiki/raw/` or existing source needs folding into wiki.
 
 ## Workflow
 
-1. Read the source document thoroughly.
-2. Discuss key takeaways with the user when that would improve the synthesis, especially for early sources in a new wiki.
-3. Create a source summary page in `wiki/pages/sources/`.
-4. Update relevant concept, entity, decision, comparison, or synthesis pages across the wiki.
-5. Create new pages when the source introduces durable concepts, entities, or decisions that warrant them.
-6. Update `wiki/index.md` to catalog created or materially changed pages.
-7. Append an ingest entry to `wiki/log.md`.
+1. Read source thoroughly
+2. Discuss key takeaways with user (especially early sources in new wiki)
+3. Create source summary: `scripts/wiki-new-page source <source-name>`
+4. Update affected pages
+5. Create new pages using `scripts/wiki-new-page <type> <name>`
+6. Update index: `scripts/wiki-update-index add <type> <name> <description>`
+7. Log: `scripts/wiki-log ingest "<title>" "<summary>"`
 
-A single source may touch many wiki pages. That is expected.
+## Outputs (minimum)
 
-## Ingest Outputs
+- Source summary page: `scripts/wiki-new-page source <source-name>`
+- Updates to affected pages
+- Index entries added: `scripts/wiki-update-index add <type> <name> <desc>`
+- Log entry appended: `scripts/wiki-log ingest "<title>" "<summary>"`
 
-Every ingest should produce, at minimum:
-
-- A source summary page
-- Updates to affected synthesis pages or concept/entity pages
-- An updated index entry set
-- A log entry
-
-## Log Entry Format
+## Log Format
 
 ```markdown
 ## [YYYY-MM-DD] ingest | [Source Title]
 
-Added `raw/papers/paper-consensus-raft.md`. Created source summary. Updated 8 concept pages (consensus, leader-election, log-replication). Created 2 new entity pages (node, log-entry). Updated index.
+Added `raw/...`. Created source summary. Updated N concept pages. Created N new pages. Updated index.
 ```
 
 ## Creation Heuristics
 
-Create new pages during ingest when:
+Create pages when:
+- Concept/entity appears across multiple sources and merits synthesis
+- Source introduces reusable comparison
+- Source motivates design decision
+- Source fills out a stub enough to convert
 
-- A concept or entity appears across multiple sources and now clearly merits synthesis
-- The source introduces a reusable comparison
-- The source changes or motivates a design decision
-- The source fills out a stub enough to convert it into a real page
-
-If a concept is clearly important but not fully developed yet, create a stub page rather than leaving the term untracked.
+For important concepts not yet fully developed, create a stub page.

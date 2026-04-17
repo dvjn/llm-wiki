@@ -1,0 +1,159 @@
+#!/bin/bash
+# wiki-new-page - Create a new wiki page with correct naming
+# Usage: wiki-new-page <type> <name>
+# Types: concept, entity, decision, comparison, synthesis, source
+#
+# Examples:
+#   wiki-new-page concept three-phase-commit
+#   wiki-new-page decision use-postgres
+#   wiki-new-page entity user-session
+
+set -e
+
+TYPE="$1"
+NAME="$2"
+
+if [ -z "$TYPE" ] || [ -z "$NAME" ]; then
+    echo "Usage: wiki-new-page <type> <name>"
+    echo "Types: concept, entity, decision, comparison, synthesis, source"
+    exit 1
+fi
+
+# Validate type
+case "$TYPE" in
+    concept|entity|decision|comparison|synthesis|source) ;;
+    *)
+        echo "Error: Invalid type '$TYPE'"
+        echo "Valid types: concept, entity, decision, comparison, synthesis, source"
+        exit 1
+        ;;
+esac
+
+# Validate name (lowercase, hyphens only)
+if ! echo "$NAME" | grep -qE '^[a-z0-9-]+$'; then
+    echo "Error: Name must be lowercase with hyphens only (no spaces, no uppercase)"
+    exit 1
+fi
+
+# Build paths
+WIKI_DIR="${WIKI_DIR:-wiki}"
+PAGE_PATH="${WIKI_DIR}/pages/${TYPE}s/${TYPE}-${NAME}.md"
+LINK="[[${TYPE}-${NAME}]]"
+
+# Check if already exists
+if [ -f "$PAGE_PATH" ]; then
+    echo "Error: Page already exists at $PAGE_PATH"
+    exit 1
+fi
+
+# Create parent directory if needed
+mkdir -p "$(dirname "$PAGE_PATH")"
+
+# Generate content based on type
+case "$TYPE" in
+    concept)
+        cat > "$PAGE_PATH" << 'EOF'
+# [Title]
+
+> Brief one-line definition
+
+## Status
+Stub - needs expansion
+
+## Notes
+[Initial understanding]
+EOF
+        ;;
+    entity)
+        cat > "$PAGE_PATH" << 'EOF'
+# [Title]
+
+> One-line role description
+
+## Purpose
+[What this entity does]
+
+## Structure
+[Fields, properties]
+
+## Lifecycle
+[Creation, updates, destruction]
+EOF
+        ;;
+    decision)
+        cat > "$PAGE_PATH" << 'EOF'
+# Decision: [Title]
+
+**Status**: Accepted
+**Date**: YYYY-MM-DD
+**Context**: [What triggered this decision]
+
+## Decision
+[The choice made]
+
+## Rationale
+[Why - alternatives considered, trade-offs]
+
+## Consequences
+- Positive: ...
+- Negative: ...
+- Risks: ...
+EOF
+        ;;
+    comparison)
+        cat > "$PAGE_PATH" << 'EOF'
+# [A] vs [B]
+
+> Brief summary of comparison
+
+## Dimensions
+| Dimension | [A] | [B] |
+|-----------|-----|-----|
+| X         | ... | ... |
+
+## Analysis
+[Trade-offs, when each fits]
+EOF
+        ;;
+    synthesis)
+        cat > "$PAGE_PATH" << 'EOF'
+# [Topic]
+
+> Evolving thesis or open questions
+
+## Thesis
+[Current understanding]
+
+## Open Questions
+- [ ] Question 1
+- [ ] Question 2
+
+## Evidence
+[Supporting points from sources]
+EOF
+        ;;
+    source)
+        cat > "$PAGE_PATH" << 'EOF'
+# Source: [Title]
+
+**Type**: spec | paper | article
+**URL**: [original URL if web source]
+**Date Added**: YYYY-MM-DD
+
+## Summary
+[3-5 sentence summary]
+
+## Key Extracts
+> [Direct quotes or paraphrased key points]
+
+## Related Concepts
+- [[concept-x]] - how this informs it
+
+## Impact
+[How this changed understanding]
+EOF
+        ;;
+esac
+
+echo "Created: $PAGE_PATH"
+echo "Link: $LINK"

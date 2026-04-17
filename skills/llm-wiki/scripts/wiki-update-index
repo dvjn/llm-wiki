@@ -1,0 +1,131 @@
+#!/bin/bash
+# wiki-update-index - Update wiki/index.md with new or changed pages
+# Usage: wiki-update-index add <type> <name> <description> [source-file]
+#        wiki-update-index remove <type> <name>
+#        wiki-update-index stats
+#
+# Examples:
+#   wiki-update-index add concept three-phase-commit "protocol for distributed commit"
+#   wiki-update-index remove concept stale-concept
+#   wiki-update-index stats
+
+set -e
+
+WIKI_DIR="${WIKI_DIR:-wiki}"
+INDEX_FILE="${WIKI_DIR}/index.md"
+
+COMMAND="$1"
+TYPE="$2"
+NAME="$3"
+
+case "$COMMAND" in
+    add)
+        DESCRIPTION="${4:-}"
+        SOURCE="${5:-}"
+        
+        if [ -z "$TYPE" ] || [ -z "$NAME" ]; then
+            echo "Usage: wiki-update-index add <type> <name> <description> [source]"
+            exit 1
+        fi
+        
+        LINK="[[${TYPE}-${NAME}]]"
+        
+        # Check if index exists
+        if [ ! -f "$INDEX_FILE" ]; then
+            echo "Error: $INDEX_FILE not found"
+            exit 1
+        fi
+        
+        # Check if entry already exists
+        if grep -q "^\\- $LINK " "$INDEX_FILE" 2>/dev/null; then
+            echo "Entry already exists: $LINK"
+            exit 0
+        fi
+        
+        # Find the section for this type
+        SECTION=""
+        case "$TYPE" in
+            concept) SECTION="## Concepts" ;;
+            entity) SECTION="## Entities" ;;
+            decision) SECTION="## Decisions" ;;
+            comparison) SECTION="## Comparisons" ;;
+            synthesis) SECTION="## Synthesis" ;;
+            source) SECTION="## Sources" ;;
+        esac
+        
+        if [ -z "$SECTION" ]; then
+            echo "Error: Unknown type '$TYPE'"
+            exit 1
+        fi
+        
+        # Add entry after section header
+        if grep -q "^$SECTION$" "$INDEX_FILE"; then
+            # Find line number and insert after it
+            LINE_NUM=$(grep -n "^$SECTION$" "$INDEX_FILE" | cut -d: -f1)
+            if [ -n "$LINE_NUM" ]; then
+                # Check if there's already content after this section
+                NEXT_LINE=$((LINE_NUM + 1))
+                NEXT_CONTENT=$(sed -n "${NEXT_LINE}p" "$INDEX_FILE")
+                
+                if [ -z "$NEXT_CONTENT" ] || [[ "$NEXT_CONTENT" =~ ^##\  ]]; then
+                    # Section is empty or followed by another section, add entry
+                    sed -i "${LINE_NUM}a\\- $LINK - ${DESCRIPTION}" "$INDEX_FILE"
+                else
+                    # Find last entry in section and add after it
+                    LAST_LINE=$LINE_NUM
+                    while true; do
+                        CHECK=$(sed -n "$((LAST_LINE + 1))p" "$INDEX_FILE" 2>/dev/null)
+                        if [ -z "$CHECK" ] || [[ "$CHECK" =~ ^##\  ]]; then
+                            break
+                        fi
+                        LAST_LINE=$((LAST_LINE + 1))
+                    done
+                    sed -i "${LAST_LINE}a\\- $LINK - ${DESCRIPTION}" "$INDEX_FILE"
+                fi
+                echo "Added: $LINK - $DESCRIPTION"
+            fi
+        else
+            echo "Error: Section '$SECTION' not found in index"
+            exit 1
+        fi
+        ;;
+    
+    remove)
+        NAME="$3"
+        if [ -z "$TYPE" ] || [ -z "$NAME" ]; then
+            echo "Usage: wiki-update-index remove <type> <name>"
+            exit 1
+        fi
+        
+        LINK="[[${TYPE}-${NAME}]]"
+        
+        if grep -q "^\\- $LINK " "$INDEX_FILE" 2>/dev/null; then
+            sed -i "/^- $LINK /d" "$INDEX_FILE"
+            echo "Removed: $LINK"
+        else
+            echo "Entry not found: $LINK"
+        fi
+        ;;
+    
+    stats)
+        if [ ! -f "$INDEX_FILE" ]; then
+            echo "Error: $INDEX_FILE not found"
+            exit 1
+        fi
+        
+        echo "Wiki Statistics"
+        echo "==============="
+        echo "Concepts:    $(grep -c '^- \[\[' "$INDEX_FILE" | head -1 || echo 0)"
+        echo "Sources:     $(grep -c '^- \[\[source-' "$INDEX_FILE" || echo 0)"
+        echo "Total pages: $(grep -c '^- \[\[' "$INDEX_FILE" || echo 0)"
+        ;;
+    
+    *)
+        echo "Usage: wiki-update-index <command> [args]"
+        echo "Commands:"
+        echo "  add <type> <name> <description> [source]  - Add entry to index"
+        echo "  remove <type> <name>                     - Remove entry from index"
+        echo "  stats                                      - Show statistics"
+        exit 1
+        ;;
+esac
