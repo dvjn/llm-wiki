@@ -21,6 +21,7 @@ Concrete files and structures the skill defines.
 
 - [[entity-schema-document]] — `wiki/SCHEMA.md`; the config file that makes the LLM a disciplined wiki maintainer
 - [[entity-skill-md]] — the skill's root instruction document; routes the LLM to ingest, query, and lint workflows
+- [[entity-agent-md]] — a generic project-level steering file that all agents load before working; wiki section makes the wiki discoverable
 - [[entity-index-md]] — the content catalog; starting point for every query
 - [[entity-log-md]] — the append-only record of every wiki operation
 
@@ -62,9 +63,9 @@ Per-source summaries.
 | Metric | Count |
 |--------|-------|
 | Raw sources | 11 |
-| Wiki pages | 27 |
+| Wiki pages | 28 |
 | Concepts | 8 |
-| Entities | 4 |
+| Entities | 5 |
 | Decisions | 4 |
 | Comparisons | 0 |
 | Synthesis | 0 |

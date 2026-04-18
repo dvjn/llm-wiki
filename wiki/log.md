@@ -10,6 +10,18 @@ Added `raw/articles/article-agentskills-what-are-skills.md` and `raw/articles/ar
 
 ---
 
+## [2026-04-18] lint | Wiki health check
+
+Created [[entity-agent-md]] entity page (generic project-level steering file that all agents load; wiki section makes wiki discoverable). Updated [[index.md]] (28 wiki pages, 5 entities). AGENTS.md wiki section: added. No broken links, no contradictions, no orphans found.
+
+---
+
+## [2026-04-18] create | Added AGENTS.md to project root
+
+Created AGENTS.md with project overview and "Knowledge Base - Wiki" section (from templates/agents-md-wiki-section.md). All agents working in this project now discover the wiki at startup.
+
+---
+
 ## [2026-04-17] decision | Schema always at wiki/SCHEMA.md
 
 Recorded [[decision-schema-in-wiki-dir]]: schema layer always lives at `wiki/SCHEMA.md`, never in agent-specific config files. Updated [[entity-schema-document]] to reflect fixed path. Updated [[concept-three-layer-architecture]] schema row. Updated [[entity-skill-md]] to clarify it is a skill entrypoint, not the schema. Updated [[source-karpathy-llm-wiki]] note. Added decision to index (15 pages, 4 decisions).
