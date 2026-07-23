@@ -1,35 +1,108 @@
 {
-  "skill_name": "llm-wiki",
+  "skills": ["llm-wiki"],
   "evals": [
     {
       "id": 1,
-      "prompt": "I just cloned a new Rust project and I want to set up an LLM wiki to track my understanding of the codebase. The project is a web server using Axum and it has a complex middleware stack. Help me initialize a wiki in a wiki/ directory with the proper structure and create a SCHEMA.md that fits a Rust web project.",
-      "expected_output": "A wiki/ directory with raw/, pages/ subdirectories, index.md, log.md, and a SCHEMA.md customized for a Rust Axum project with appropriate page categories and templates",
-      "files": []
+      "query": "I just cloned a new Rust project and I want to set up an LLM wiki to track my understanding of the codebase. The project is a web server using Axum and it has a complex middleware stack. Help me initialize a wiki in a wiki/ directory with the proper structure and create a SCHEMA.md that fits a Rust web project.",
+      "files": [],
+      "expected_behavior": [
+        "Creates wiki/ with raw/ and pages/ subdirectory trees plus index.md and log.md per the bootstrap structure",
+        "Creates wiki/SCHEMA.md customized for a Rust Axum web project (domain-appropriate page-type guidance, conventions, ingest scope) rather than a generic copy",
+        "Adds the Knowledge Base - Wiki section to AGENTS.md using the template verbatim"
+      ]
     },
     {
       "id": 2,
-      "prompt": "I have a wiki set up and I just added a new source file: wiki/raw/papers/paper-crdt-2011.md. It's a paper about Conflict-free Replicated Data Types. Please ingest this source into the wiki — create a source summary, update relevant concept pages, and create any new concept pages that are needed.",
-      "expected_output": "Source summary page created in wiki/pages/sources/, concept pages for CRDT and related concepts created/updated, index.md updated with new pages, log.md appended with ingest entry",
-      "files": ["wiki/raw/papers/paper-crdt-2011.md"]
+      "query": "I have a wiki set up and I just added a new source file: wiki/raw/papers/paper-crdt-2011.md. It's a paper about Conflict-free Replicated Data Types. Please ingest this source into the wiki — create a source summary, update relevant concept pages, and create any new concept pages that are needed.",
+      "files": ["wiki/raw/papers/paper-crdt-2011.md"],
+      "expected_behavior": [
+        "Creates a source summary page in wiki/pages/sources/",
+        "Creates or updates CRDT-related concept pages using the matching templates",
+        "Adds index.md entries for every new page and appends one ingest entry to log.md"
+      ]
     },
     {
       "id": 3,
-      "prompt": "My wiki has been growing for a while and I suspect there might be some issues. Can you run a lint pass on the wiki to check for broken links, orphan pages, missing concepts, and contradictions? Report what you find and propose fixes.",
-      "expected_output": "Lint report identifying broken links, orphan pages, frequently mentioned concepts without pages, and potential contradictions. Log entry appended to wiki/log.md with lint results.",
-      "files": []
+      "query": "My wiki has been growing for a while and I suspect there might be some issues. Can you run a lint pass on the wiki to check for broken links, orphan pages, missing concepts, and contradictions? Report what you find and propose fixes.",
+      "files": [],
+      "expected_behavior": [
+        "Runs the six lint checks (contradictions, stale claims, orphans, term gaps, missing cross-references, research gaps) plus the AGENTS.md section check",
+        "Proposes fixes and asks confirmation before applying non-trivial ones",
+        "Appends a lint entry to wiki/log.md in the documented format"
+      ]
     },
     {
       "id": 4,
-      "prompt": "I need to understand how authentication works in my system. Looking at my wiki, can you query the relevant pages and give me a synthesis of how authentication is implemented, what concepts are involved, and what design decisions were made?",
-      "expected_output": "Synthesized answer drawing from wiki/pages/concepts/concept-authentication.md, wiki/pages/entities/entity-auth-middleware.md, wiki/pages/decisions/decision-jwt-vs-session.md, with proper citations like [[concept-authentication]] §2 and [[decision-jwt-vs-session]]",
-      "files": []
+      "query": "I need to understand how authentication works in my system. Looking at my wiki, can you query the relevant pages and give me a synthesis of how authentication is implemented, what concepts are involved, and what design decisions were made?",
+      "files": [],
+      "expected_behavior": [
+        "Answers by synthesizing across the relevant concept, entity, and decision pages rather than dumping excerpts",
+        "Cites at section level using the [[type-name]] §Section format",
+        "Surfaces gaps noticed and offers follow-up questions or filing the synthesis back"
+      ]
     },
     {
       "id": 5,
-      "prompt": "After researching different database options, I've decided to use PostgreSQL with SeaORM instead of SQLite. This is a significant architectural decision. Please create a decision page documenting this choice, including the alternatives considered (SQLite, MySQL, Diesel) and the rationale.",
-      "expected_output": "Decision page created at wiki/pages/decisions/decision-use-postgresql-seaorm.md following the decision template with status, date, context, decision, rationale, consequences, and related pages",
-      "files": []
+      "query": "After researching different database options, I've decided to use PostgreSQL with SeaORM instead of SQLite. This is a significant architectural decision. Please create a decision page documenting this choice, including the alternatives considered (SQLite, MySQL, Diesel) and the rationale.",
+      "files": [],
+      "expected_behavior": [
+        "Creates wiki/pages/decisions/decision-<name>.md following the decision template (status, date, context, decision, rationale, consequences, related)",
+        "Updates index.md and appends to log.md"
+      ]
+    },
+    {
+      "id": 6,
+      "query": "[Agent has a subagent-spawning tool available] My wiki covers caching, session storage, and rate limiting across many pages. How do these three subsystems interact, and where do their designs conflict?",
+      "files": [],
+      "expected_behavior": [
+        "Makes ONE subagent call whose spawn prompt instructs the subagent to first read references/agents/librarian.md and then answer the question verbatim",
+        "Does NOT read the librarian role file or any wiki page into the main thread",
+        "Relays the subagent's synthesized answer with [[type-name]] §Section citations and surfaces gaps it noticed",
+        "Offers to file the synthesis back, and does that filing inline (no scribe spawn for a single page)"
+      ]
+    },
+    {
+      "id": 7,
+      "query": "[Agent has a subagent-spawning tool available; wiki/index.md has NOT been read this session] What port does the dev server run on? It's documented in the wiki.",
+      "files": [],
+      "expected_behavior": [
+        "Delegates as one librarian call (index not resident, so delegation is cheaper than pulling index + pages into the main thread) OR answers inline only if index.md is already in context and the fact is in 1-2 known pages",
+        "If delegating: the spawn prompt tells the subagent to read the role file itself — the main agent does not read references/agents/librarian.md",
+        "Total main-thread wiki footprint stays at roughly one tool call plus a terse answer"
+      ]
+    },
+    {
+      "id": 8,
+      "query": "[Agent has a subagent-spawning tool available] Run a lint pass on the wiki and apply the fixes I approve.",
+      "files": [],
+      "expected_behavior": [
+        "Runs the audit as ONE librarian subagent call (task = audit) covering all six checks in the subagent's thread; no parallel per-check fan-out unless the user asked for speed",
+        "Checks the AGENTS.md wiki section in the main thread",
+        "Applies approved multi-page fixes through a SINGLE scribe subagent call (never two scribes in parallel) that appends the lint report to wiki/log.md",
+        "Never reads role files into the main thread — spawn prompts tell subagents to read their own role file"
+      ]
+    },
+    {
+      "id": 9,
+      "query": "[Agent has a subagent-spawning tool available with web access] Ingest this source into the wiki: https://example.com/blog/event-sourcing-patterns",
+      "files": [],
+      "expected_behavior": [
+        "Makes three subagent calls in sequence, never reading the source, wiki files, or role files in the main thread",
+        "Call 1 (researcher): fetches the URL and writes a provenance-stamped raw note under wiki/raw/articles/, touching nothing under wiki/pages/, index.md, or log.md",
+        "Call 2 (librarian, source analysis): returns takeaways and a proposed page plan, which the main agent discusses with the user",
+        "Call 3 (scribe): executes the approved plan from a standalone brief that includes the source path and templates directory, updating index.md and log.md",
+        "Each spawn prompt instructs the subagent to read its own role file first"
+      ]
+    },
+    {
+      "id": 10,
+      "query": "[Agent has NO subagent-spawning capability] My wiki covers caching, session storage, and rate limiting across many pages. How do these three subsystems interact?",
+      "files": [],
+      "expected_behavior": [
+        "Performs the synthesis workflow directly: reads index.md, reads the relevant pages, answers with [[type-name]] §Section citations",
+        "Makes no attempt to spawn subagents",
+        "Output quality is indistinguishable from the delegated path"
+      ]
     }
   ]
 }

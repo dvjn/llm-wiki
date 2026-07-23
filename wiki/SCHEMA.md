@@ -25,7 +25,6 @@ wiki/
 │   ├── decisions/         # Design decisions (ADR-style)
 │   ├── comparisons/       # Trade-off analyses (e.g. wiki vs RAG)
 │   ├── synthesis/         # Evolving thesis, open questions
-│   ├── stubs/             # Placeholder pages for tracked-but-underdeveloped topics
 │   └── sources/           # Per-source summaries
 │
 ├── index.md               # Content catalog
@@ -42,8 +41,9 @@ wiki/
 | decision | `pages/decisions/` | Recorded design choices with rationale |
 | comparison | `pages/comparisons/` | Trade-off analyses between approaches |
 | synthesis | `pages/synthesis/` | Evolving thesis, open questions, design tensions |
-| stub | `pages/stubs/` | Placeholder for a tracked concept that isn't yet fully synthesized |
 | source | `pages/sources/` | Summaries of raw source documents added to `wiki/raw/` |
+
+Stubs are not a directory: a stub is a placeholder page written with the stub template but living in the directory of the type it will graduate into (e.g. a stub concept is `pages/concepts/concept-<name>.md`), so its `[[type-name]]` link resolves from day one.
 
 ## Domain-Specific Conventions
 

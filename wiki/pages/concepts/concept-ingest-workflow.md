@@ -15,13 +15,15 @@ Ingest is the primary mechanism by which knowledge enters the wiki. When a new s
 
 ## Ingest Steps
 
-1. Read the source document thoroughly.
+1. Read the source document thoroughly. (URL/topic sources are first captured into `wiki/raw/` — by [[entity-wiki-researcher]] when available.)
 2. Discuss key takeaways when that improves synthesis (especially early in a new wiki).
 3. Create a source summary page in `wiki/pages/sources/`.
 4. Update relevant concept/entity/decision/comparison/synthesis pages.
 5. Create new pages when the source introduces durable, wiki-worthy material.
 6. Update `wiki/index.md`.
 7. Append an entry to `wiki/log.md`.
+
+With subagents, the main agent performs none of the reading or writing itself ([[decision-subagent-delegation]]): step 1 becomes a librarian source-analysis call returning takeaways and a proposed page plan, step 2 discusses that report with the user, and steps 3-7 become a single scribe call executing the approved plan (the scribe reads the source itself for details). Judgment stays in the main thread, exercised over the reports.
 
 ## Related Concepts
 
@@ -32,3 +34,4 @@ Ingest is the primary mechanism by which knowledge enters the wiki. When a new s
 ## Related Decisions
 
 - [[decision-immutable-raw-sources]] — raw files are never modified during ingest
+- [[decision-subagent-delegation]] — writing steps delegate to [[entity-wiki-scribe]]; URL sources arrive via [[entity-wiki-researcher]]

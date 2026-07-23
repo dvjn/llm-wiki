@@ -2,19 +2,29 @@
 
 Wiki health check.
 
-## Workflow
+## Checks
 
-1. Scan for contradictions — if subagents available, delegate parallel search
-2. Identify stale claims (newer sources supersede)
-3. Find orphan pages (no inbound links) — if subagents available, delegate
-4. Identify frequently mentioned terms without pages — if subagents available, delegate
-5. Find missing cross-references — if subagents available, delegate
-6. Surface research gaps — if subagents available, delegate
-7. Check AGENTS.md for the "Knowledge Base - Wiki" section. If missing, insist on adding it using ONLY the template (references/templates/agents-md-wiki-section.md) — add nothing else.
+1. Contradictions across related pages
+2. Stale claims (newer sources supersede)
+3. Orphan pages (no inbound links)
+4. Frequently mentioned terms without pages
+5. Missing cross-references
+6. Research gaps
+7. AGENTS.md has the "Knowledge Base - Wiki" section. If missing, insist on adding it using ONLY the template (references/templates/agents-md-wiki-section.md) — add nothing else.
 
-For steps 1, 3, 4, 5, 6: if subagents available, delegate parallel subagents → aggregate results → propose fixes. If subagents unavailable, perform checks directly.
+## With subagents (preferred)
 
-Propose fixes; ask confirmation before applying non-trivial changes.
+Spawn each subagent with a short prompt — "First read `<skill path>/references/agents/<role>.md` and follow everything below its `---` separator, then: <task>" — never read the role files yourself.
+
+- **Audit** (checks 1-6): one librarian call, task = "audit". It runs the full checklist in its own thread and returns findings grouped by check, with evidence and proposed fixes. Holds to roughly a 150-page wiki; beyond that, run one audit call per page type. Fan out parallel librarians (one per check) only when speed matters more than main-context economy.
+- Check 7 is a single file check — do it in the main thread.
+- Propose fixes from the report; ask confirmation before applying non-trivial changes.
+- **Fixes**: one scribe call (never more than one scribe at a time) carrying the approved fixes and the templates directory path; it applies them and appends the lint report to `wiki/log.md`. A trivial single-file fix is cheaper applied inline.
+- **Research gaps** the user wants filled: one researcher call per gap to capture sources into `wiki/raw/`, then ingest in a follow-up pass.
+
+## Without subagents
+
+Perform checks 1-7 directly, propose fixes, apply approved ones, and append the lint report to `wiki/log.md`. Suggest research gaps for the user to curate.
 
 ## Typical Fixes
 

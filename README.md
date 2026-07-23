@@ -13,6 +13,8 @@ Build and maintain a knowledge wiki using LLMs. Three-layer architecture: raw so
 
 Workflows become directly callable: `/llm-wiki:setup`, `/llm-wiki:ingest`, `/llm-wiki:query`, `/llm-wiki:lint`.
 
+The skill ships three subagent role prompts (`skills/llm-wiki/references/agents/`), one per stage of the knowledge lifecycle: researcher (acquire — web research distilled into `wiki/raw/` source notes), librarian (retrieve — all wiki reading, from lookups to lint audits and source analysis), and scribe (write — pages and index/log updates from a brief). Each wiki operation costs the main agent roughly one subagent call plus a compact report — wiki file content never enters the main context. Any harness that can spawn subagents with a custom prompt gets this on every install path; without subagents the workflows run directly and identically.
+
 ### OpenAI Codex (plugin)
 
 ```bash

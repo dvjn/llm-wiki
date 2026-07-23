@@ -26,6 +26,15 @@ Without progressive disclosure, an agent with many skills would load all instruc
 - **Tier 2 (SKILL.md body)**: Keep under 500 lines / 5000 tokens. Cover the main workflow but defer details to references.
 - **Tier 3 (references/)**: Split detailed reference material into focused files. Agents load these on demand, so smaller files mean less wasted context.
 
+## Authoritative Numbers (Anthropic official)
+
+Anthropic's official authoring docs pin down the disclosure constraints:
+
+- **SKILL.md body under 500 lines** "for optimal performance"; split into separate files when approaching the limit. — [[source-anthropic-skill-best-practices]]
+- **References one level deep** from SKILL.md. Deeply nested references risk partial reads — Claude "might use commands like `head -100` to preview rather than reading entire files, resulting in incomplete information." — [[source-anthropic-skill-best-practices]]
+- **Reference files longer than 100 lines carry a table of contents** at the top, so a partial preview still shows the file's full scope. — [[source-anthropic-skill-best-practices]]
+- Claude Code runtime: an invoked SKILL.md "enters the conversation as a single message and stays there for the rest of the session" — so tier-2 content is a recurring per-turn token cost, reinforcing the body-length limit. The skill *listing* truncates combined `description` + `when_to_use` at **1,536 characters**. — [[source-claude-code-skills-authoring]]
+
 ## Relevance to This Skill
 
 The llm-wiki skill follows progressive disclosure:
@@ -39,6 +48,8 @@ This means the three workflow references are tier-3 resources: they are not load
 
 - [[source-agentskills-what-are-skills]] §How skills work — progressive disclosure as the core design principle
 - [[source-agentskills-specification]] §Progressive disclosure — token budgets and size constraints
+- [[source-anthropic-skill-best-practices]] — authoritative 500-line body, one-level-deep, TOC>100-line rules
+- [[source-claude-code-skills-authoring]] — 1,536-char listing cap; body-stays-in-context lifecycle
 
 ## Related Concepts
 

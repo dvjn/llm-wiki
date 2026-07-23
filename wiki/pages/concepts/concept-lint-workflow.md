@@ -22,6 +22,8 @@ Linting scans all wiki pages for structural and semantic issues that accumulate 
 5. Find missing cross-references between clearly related pages.
 6. Identify research gaps resolvable by adding sources or running a web search.
 
+With subagents, the whole checklist runs as ONE librarian audit call — findings return grouped by check with evidence and proposed fixes, and only that report enters the main context ([[decision-subagent-delegation]]). The single call holds to roughly a 150-page wiki; beyond that, chunk the audit by page type. Parallel one-per-check fan-out is an opt-in when speed matters more than main-context economy. Approved multi-page fixes are applied through a single scribe call; trivial single-file fixes inline. Research gaps the user wants filled dispatch external research ([[entity-wiki-researcher]]) to capture sources for a follow-up ingest.
+
 ## Typical Fixes
 
 - Repair broken or missing internal links
@@ -40,3 +42,5 @@ Linting scans all wiki pages for structural and semantic issues that accumulate 
 
 - [[entity-log-md]] — lint passes are always recorded here
 - [[entity-index-md]] — orphan detection starts from the index
+- [[entity-wiki-librarian]] — runs the audit checklist in one call
+- [[entity-wiki-scribe]] — applies approved fixes and logs the pass

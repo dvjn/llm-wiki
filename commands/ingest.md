@@ -5,6 +5,6 @@ argument-hint: [path or URL of the source]
 
 Ingest the following source into the project wiki: $ARGUMENTS
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/llm-wiki/references/ingest.md` and follow the workflow. Load page templates from `${CLAUDE_PLUGIN_ROOT}/skills/llm-wiki/references/templates/` only as needed — one template per page type you create. Update `wiki/index.md` and append to `wiki/log.md`.
+Read `${CLAUDE_PLUGIN_ROOT}/skills/llm-wiki/references/ingest.md` and follow it. When it says to spawn a subagent, the role files live at `${CLAUDE_PLUGIN_ROOT}/skills/llm-wiki/references/agents/` and the templates directory is `${CLAUDE_PLUGIN_ROOT}/skills/llm-wiki/references/templates/` — use these absolute paths in spawn prompts; do not read the role files yourself.
 
 If no source was given, ask which source to ingest.

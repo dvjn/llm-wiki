@@ -4,13 +4,13 @@
 
 ## Core Definition
 
-A stub is a skeleton page created when a term recurs across sources (or would produce a broken cross-reference) but there isn't enough material yet to synthesize a full page. Stubs live in `wiki/pages/stubs/` and carry an explicit status checklist so they can graduate into a full concept, entity, or decision page later.
+A stub is a skeleton page created when a term recurs across sources (or would produce a broken cross-reference) but there isn't enough material yet to synthesize a full page. A stub lives in the directory of the type it will graduate into (a stub concept is `pages/concepts/concept-<name>.md`) — so its `[[type-name]]` link resolves immediately — and carries an explicit status checklist so it can be rewritten in place as a full page later.
 
 ## Key Properties
 
 - **Visible debt**: A stub turns an implicit gap into a tracked, linkable artifact. The `Status` checklist names what the stub still needs (core concept, properties, sources, cross-references).
 - **Link target**: Stubs exist partly to keep cross-references unbroken — the [[concept-type-prefixed-links]] system assumes that if you link to something, the page exists.
-- **Graduation path**: When a stub has enough material, it's rewritten in place as a concept/entity/decision page and (if needed) moved out of `stubs/`.
+- **Graduation path**: When a stub has enough material, it's rewritten in place as a full concept/entity/decision page — same file, same link.
 - **Created by workflows, not humans**: [[concept-ingest-workflow]] creates stubs when a source references a concept it can't fully capture; [[concept-lint-workflow]] creates stubs for frequently mentioned but undocumented terms.
 
 ## When to Create a Stub

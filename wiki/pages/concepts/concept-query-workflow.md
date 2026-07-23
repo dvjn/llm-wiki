@@ -16,11 +16,13 @@ The query workflow starts from `wiki/index.md` to identify relevant pages, reads
 
 ## Query Types
 
-| Type | Description | Reading depth |
-|------|-------------|---------------|
+| Type | Description | Reading depth (in the reader's thread) |
+|------|-------------|----------------------------------------|
 | Lookup | Retrieve a specific fact or definition | index + 1-2 pages |
 | Synthesis | Connect concepts across multiple pages | index + all relevant pages |
 | Gap/contradiction | Health-check coverage or consistency | index + affected pages |
+
+With subagents, a query is one librarian call by default: the reading happens in the subagent's thread and only a cited answer, pages consulted, and gaps noticed enter the main context ([[decision-subagent-delegation]]). Exception: a lookup may run inline when the index is already resident and the fact sits in 1-2 known pages. Filed synthesis is written inline (the answer is already in the main context); questions the wiki cannot answer can dispatch external research ([[entity-wiki-researcher]]) to capture sources for ingest. Without subagents, the same reading depths apply directly.
 
 ## Filing Threshold
 
@@ -35,3 +37,5 @@ File when the answer synthesizes multiple pages. File directly (without promptin
 ## Related Entities
 
 - [[entity-index-md]] — the starting point for every query
+- [[entity-wiki-librarian]] — one call per query, whatever the type
+- [[entity-wiki-scribe]] — files synthesis back into the wiki

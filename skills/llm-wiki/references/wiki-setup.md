@@ -18,6 +18,7 @@ wiki/
 │   ├── comparisons/
 │   ├── synthesis/
 │   └── sources/
+├── SCHEMA.md
 ├── index.md
 └── log.md
 ```
@@ -36,6 +37,7 @@ Create full tree even if some directories start empty.
 ## Entities
 ## Decisions
 ## Comparisons
+## Synthesis
 ## Sources
 ```
 
@@ -46,9 +48,27 @@ Create full tree even if some directories start empty.
 Append-only record of wiki operations.
 ```
 
+`SCHEMA.md` — the per-project schema layer; write it customized to THIS project (ask the user about their domain if unclear):
+```markdown
+# Wiki Schema — [Project Name]
+
+[One paragraph: what this wiki tracks and why.]
+
+## Page Types in Use
+[The standard type table, trimmed/extended for the domain — e.g. add when-to-create guidance per type.]
+
+## Domain-Specific Conventions
+[Naming, linking, or content rules specific to this project.]
+
+## Ingest Scope
+[What kinds of sources belong in this wiki.]
+```
+
+The schema co-evolves with the project — subagents and workflows consult it for domain rules, so keep it current as conventions emerge.
+
 ## Customization
 
-Start default; adapt only when domain needs it:
+Start default; adapt only when domain needs it (record adaptations in SCHEMA.md):
 - `raw/rfcs/` for standards-heavy work
 - `pages/decisions/` for architecture wikis
 - Emphasize `pages/synthesis/` for research
