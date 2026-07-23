@@ -1,0 +1,14 @@
+{
+  "name": "dvjn",
+  "owner": {
+    "name": "Divya Jain"
+  },
+  "description": "Plugins by Divya Jain",
+  "plugins": [
+    {
+      "name": "llm-wiki",
+      "source": "./",
+      "description": "Build and maintain a knowledge wiki using LLMs"
+    }
+  ]
+}

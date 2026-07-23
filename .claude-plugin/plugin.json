@@ -1,0 +1,12 @@
+{
+  "name": "llm-wiki",
+  "description": "Build and maintain a knowledge wiki using LLMs",
+  "version": "1.0.0",
+  "author": {
+    "name": "Divya Jain"
+  },
+  "homepage": "https://github.com/dvjn/llm-wiki",
+  "repository": "https://github.com/dvjn/llm-wiki",
+  "license": "MIT",
+  "keywords": ["wiki", "knowledge-base", "documentation", "skills"]
+}
