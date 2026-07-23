@@ -10,7 +10,7 @@ Wiki health check.
 4. Identify frequently mentioned terms without pages — if subagents available, delegate
 5. Find missing cross-references — if subagents available, delegate
 6. Surface research gaps — if subagents available, delegate
-7. Check AGENTS.md for the "Knowledge Base - Wiki" section. If missing, suggest adding it (see templates/agents-md-wiki-section.md).
+7. Check AGENTS.md for the "Knowledge Base - Wiki" section. If missing, insist on adding it using ONLY the template (references/templates/agents-md-wiki-section.md) — add nothing else.
 
 For steps 1, 3, 4, 5, 6: if subagents available, delegate parallel subagents → aggregate results → propose fixes. If subagents unavailable, perform checks directly.
 

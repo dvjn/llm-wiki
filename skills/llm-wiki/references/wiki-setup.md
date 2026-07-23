@@ -53,11 +53,11 @@ Start default; adapt only when domain needs it:
 - `pages/decisions/` for architecture wikis
 - Emphasize `pages/synthesis/` for research
 
-## AGENTS.md Integration
+## AGENTS.md Integration — STRONGLY RECOMMENDED
 
-After creating the wiki structure, check if AGENTS.md exists in the project root.
+After creating the wiki structure, you MUST add the "Knowledge Base - Wiki" section to AGENTS.md in the project root.
 
-- If AGENTS.md exists: Suggest adding the "Knowledge Base - Wiki" section (see templates/agents-md-wiki-section.md)
-- If AGENTS.md doesn't exist: Suggest creating it with the wiki section
+- If AGENTS.md exists: Add the wiki section using ONLY the template at `references/templates/agents-md-wiki-section.md`. Do NOT add anything extra.
+- If AGENTS.md doesn't exist: Create it with ONLY the wiki section using the template
 
-This makes the wiki discoverable by any AGENTS.md-reading agent.
+This makes the wiki discoverable by any AGENTS.md-reading agent. DO NOT skip this step. Use the template content verbatim — do not paraphrase, expand, or add any other content to this section.
