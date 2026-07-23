@@ -19,7 +19,7 @@ Spawn each subagent with a short prompt — "First read `<skill path>/references
 - **Audit** (checks 1-6): one librarian call, task = "audit". It runs the full checklist in its own thread and returns findings grouped by check, with evidence and proposed fixes. Holds to roughly a 150-page wiki; beyond that, run one audit call per page type. Fan out parallel librarians (one per check) only when speed matters more than main-context economy.
 - Check 7 is a single file check — do it in the main thread.
 - Propose fixes from the report; ask confirmation before applying non-trivial changes.
-- **Fixes**: one scribe call (never more than one scribe at a time) carrying the approved fixes and the templates directory path; it applies them and appends the lint report to `wiki/log.md`. A trivial single-file fix is cheaper applied inline.
+- **Fixes**: one scribe call (never more than one scribe at a time) carrying the approved fixes and the templates directory path; it applies them and appends the lint report to `wiki/log.md`. A trivial single-file fix is cheaper applied inline. If no fixes are applied (clean audit, or approval pending), append the lint report to `wiki/log.md` inline — don't spawn a scribe for one line.
 - **Research gaps** the user wants filled: one researcher call per gap to capture sources into `wiki/raw/`, then ingest in a follow-up pass.
 
 ## Without subagents
