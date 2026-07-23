@@ -14,6 +14,7 @@ Domain concepts that appear across the skill's design.
 - [[concept-query-workflow]] — answering questions from wiki pages with section-level citations and filing synthesis back
 - [[concept-lint-workflow]] — health-check pass for broken links, orphans, stale claims, and contradictions
 - [[concept-stub-pages]] — placeholder pages for tracked-but-underdeveloped concepts; created by ingest and lint workflows
+- [[concept-cross-agent-skill-portability]] — one SKILL.md serving Claude Code and Codex via the open Agent Skills standard plus thin per-agent manifests
 
 ## Entities
 
@@ -34,6 +35,7 @@ Design decisions with rationale.
 - [[decision-immutable-raw-sources]] — files in `wiki/raw/` are read-only to the LLM
 - [[decision-schema-in-wiki-dir]] — schema always lives at `wiki/SCHEMA.md`, not in agent config files
 - [[decision-subagent-delegation]] — delegate search-heavy operations to subagents when available
+- [[decision-dual-plugin-packaging]] — package the repo as both a Claude Code plugin (self-hosted marketplace) and a Codex plugin around the untouched skill core
 
 ## Comparisons
 
@@ -58,16 +60,18 @@ Per-source summaries.
 - [[source-agentskills-quickstart]] — tutorial: create a dice-rolling skill; demonstrates progressive disclosure, frontmatter conventions, and description-as-routing-signal
 - [[source-agentskills-using-scripts]] — guide on bundling scripts in skills; agentic design requirements (non-interactive, structured output, helpful errors, idempotency)
 - [[source-agentskills-adding-skills-support]] — client implementation guide; discovery, parsing, disclosure, activation, context compaction risk
+- [[source-claude-code-plugins]] — official Claude Code plugin/marketplace docs; manifest schema, self-hosted marketplace, namespacing, validation
+- [[source-codex-skills-plugins]] — official Codex skills/plugin docs; Agent Skills adoption, discovery paths, invocation deltas, plugin manifest
 
 ## Statistics
 
 | Metric | Count |
 |--------|-------|
-| Raw sources | 11 |
-| Wiki pages | 29 |
-| Concepts | 8 |
+| Raw sources | 13 |
+| Wiki pages | 33 |
+| Concepts | 9 |
 | Entities | 5 |
-| Decisions | 5 |
+| Decisions | 6 |
 | Comparisons | 0 |
 | Synthesis | 0 |
-| Sources | 11 |
+| Sources | 13 |

@@ -79,3 +79,9 @@ Deleted obsolete [[concept-helper-scripts]] page (scripts were removed from skil
 ## [2026-04-17] lint | Wiki health check
 
 Fixed 1 stale-link reference in log.md (wrapped pre-rename name as code). Updated [[entity-skill-md]] structure to match current SKILL.md (removed page-templates/Core Philosophy/Why This Works; added Lazy Loading Requirement and Helper Scripts sections). Created 2 concept pages: [[concept-helper-scripts]], [[concept-stub-pages]]. Added stubs/ subdir to SCHEMA.md page-types table. Updated index Statistics (24→28 wiki pages, 7→9 concepts). No true orphans; 20 'broken' links verified as intentional in-body documentation examples.
+
+---
+
+## [2026-07-23] ingest | Claude Code plugins + Codex skills/plugins research
+
+Added `raw/articles/article-claude-code-plugins.md` and `raw/articles/article-codex-skills-plugins.md` (research notes from official docs). Created 2 source summaries ([[source-claude-code-plugins]], [[source-codex-skills-plugins]]), 1 concept page ([[concept-cross-agent-skill-portability]]), 1 decision page ([[decision-dual-plugin-packaging]]). Updated index (13 raw sources, 33 wiki pages, 9 concepts, 6 decisions, 13 sources).
