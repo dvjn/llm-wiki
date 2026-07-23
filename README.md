@@ -4,8 +4,28 @@ Build and maintain a knowledge wiki using LLMs. Three-layer architecture: raw so
 
 ## Install
 
+### Claude Code (plugin)
+
+```
+/plugin marketplace add dvjn/llm-wiki
+/plugin install llm-wiki@dvjn
+```
+
+Workflows become directly callable: `/llm-wiki:setup`, `/llm-wiki:ingest`, `/llm-wiki:query`, `/llm-wiki:lint`.
+
+### OpenAI Codex (plugin)
+
 ```bash
-npx skills install dvjn/llm-wiki
+codex plugin marketplace add dvjn/llm-wiki
+codex plugin add llm-wiki@dvjn
+```
+
+Then invoke with `$llm-wiki` or let it trigger implicitly.
+
+### Any agent (skill only)
+
+```bash
+npx skills add dvjn/llm-wiki
 ```
 
 ## Quick Start
